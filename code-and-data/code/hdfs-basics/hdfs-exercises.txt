@@ -1,0 +1,59 @@
+/**
+ * hdfs exercises
+ *
+ * part of a longer hadoop video course at http://bit.ly/learn-hadoop/
+ *
+ * @author rICh <rich@quicloud.com>
+*/
+
+cd ~/code-and-data/data # this should've been copied into your VM or cluster in the "installing" exercise
+// get the usage of our 'hadoop fs' commands
+hadoop fs -help
+
+// make a 'input-data' directory
+hadoop fs -mkdir input-data
+// load 'shakespeare' dataset into hdfs:
+hadoop fs -put shakespeare input-data/
+// you may experience an error because the data is already in there (if so, then just leave it)
+// load 'page_view' dataset into hdfs
+hadoop fs -put page_view page_view input-data/
+// load some 'junk' data into hdfs
+hadoop fs -put ~/.bash_history delete-me-later-file
+// load 'gsod' dataset into hdfs
+hadoop fs -df # first, make sure you're well under 100%
+hadoop fs -put gsod input-data/
+
+// gsod is a big dataset, as it's loading, you may want to pop another window & see what's happening
+hadoop fs -du # keep running this command, and you'll see what's growing
+// and try this one:
+hadoop fs -df # make sure you're well under 100%
+
+// make a directory in hdfs
+hadoop fs -mkdir delete-me-later-dir
+
+// do a list on our home directory:
+hadoop fs -ls # relative path (to /user/[username])
+hadoop fs -ls /user/cloudera #fully qualified path (note, this will be 'ubuntu' if using the AWS Cloudera Manager created stack
+hadoop fs -ls input-data
+// don't make this mistake
+ls -lat input-data # where is this directory?
+
+// delete our junk out
+hadoop fs -rm -r delete-me-later-file
+// says it moved to trash... that's nice!
+hadoop fs -rm -r delete-me-later-dir
+
+// cat some data out
+hadoop fs -cat input-data/shakespeare/poems
+// we can pipe this output in linux just as we're used to piping any STDOUT data
+hadoop fs -cat input-data/shakespeare/poems | less
+hadoop fs -tail input-data/shakespeare/poems # there is a tail command
+hadoop fs -cat input-data/shakespeare/poems | head # but no head command
+
+
+// get something back out of hdfs
+hadoop fs -get input-data/shakespeare/poems
+// browse it & then delete local copy
+head poems
+tail poems
+rm -rf poems
